@@ -1,0 +1,16 @@
+version: '3'
+services: 
+  mysql:
+    container_name: mysql-server
+    image: mysql
+    restart: always
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_DATABASE=gonotes
+      - MYSQL_ROOT_PASSWORD=1Q2w3e4r
+      - MYSQL_USER=gonotes
+      - MYSQL_PASSWORD=1Q2w3e4r    
+    volumes:
+      # - $GOPATH/src/github.com/alex-bezverkhniy/go-notes-api/.data/mysql:/var/lib/mysql
+      - $GOPATH/src/github.com/alex-bezverkhniy/go-notes-api/mysql-init:/docker-entrypoint-initdb.d
