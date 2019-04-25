@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -38,7 +39,8 @@ func NewApp(user, password, dbname string) App {
 
 // Run - runs api
 func (a *App) Run(address string) {
-
+	log.Println("Listening: ", address)
+	log.Fatal(http.ListenAndServe(address, a.Router))
 }
 
 func (a *App) initializeRouters() {
