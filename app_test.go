@@ -108,6 +108,21 @@ func TestUpdateNote(t *testing.T) {
 	compareNotes(expectedNote, actualNote, t)
 }
 
+func TestUpdateNonExistNote(t *testing.T) {
+	expectedNote := model.Note{ID: 1, Title: "sample updated title", Body: "sample updated body"}
+	payload, _ := json.Marshal(expectedNote)
+
+	req, _ := http.NewRequest("PUT", APIBasePath+"/notes/42", bytes.NewBuffer(payload))
+	res := executeRequest(req)
+
+	checkResponseCode(t, http.StatusNotFound, res.Code)
+
+	req, _ = http.NewRequest("GET", APIBasePath+"/notes/42", nil)
+	res = executeRequest(req)
+
+	checkResponseCode(t, http.StatusNotFound, res.Code)
+}
+
 func TestDeleteNote(t *testing.T) {
 
 	req, _ := http.NewRequest("DELETE", APIBasePath+"/notes/1", nil)

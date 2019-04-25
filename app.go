@@ -182,7 +182,11 @@ func (a *App) isNoteExist(id int, w http.ResponseWriter) bool {
 		case sql.ErrNoRows:
 			respondWithError(w, http.StatusNotFound, "Note with ID: '"+strconv.Itoa(id)+"' Not found")
 		default:
-			respondWithError(w, http.StatusInternalServerError, err.Error())
+			status := http.StatusInternalServerError
+			if err.Error() == respositories.NoteNotFoundMsg {
+				status = http.StatusNotFound
+			}
+			respondWithError(w, status, err.Error())
 		}
 		return false
 	}
