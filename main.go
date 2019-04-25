@@ -17,6 +17,9 @@ const APIDBNameEvnName = "API_DB_NAME"
 // APIDBHostEvnName - name of evn var with db host
 const APIDBHostEvnName = "API_DB_HOST"
 
+// APIDBPortEvnName - name of evn var with db port
+const APIDBPortEvnName = "API_DB_PORT"
+
 // DefaultAPIPort - default port
 const DefaultAPIPort = "8080"
 
@@ -32,13 +35,16 @@ const DefaultAPIDBName = "gonotes"
 // DefaultAPIDBHost - default db host
 const DefaultAPIDBHost = "localhost"
 
+// DefaultAPIDBPort - default db port
+const DefaultAPIDBPort = "3306"
+
 func main() {
-	a := NewApp(getDbUser(), getDbPassword(), getDbName(), getDbHost())
+	a := NewApp(getDbUser(), getDbPassword(), getDbName(), getDbHost(), getDbPort())
 	a.Run(getPort())
 }
 
 func getEnv(envName, defaultVal string) string {
-	value := os.Getenv(APIPortEvnName)
+	value := os.Getenv(envName)
 	if value == "" {
 		return defaultVal
 	}
@@ -60,6 +66,10 @@ func getDbName() string {
 
 func getDbHost() string {
 	return getEnv(APIDBHostEvnName, DefaultAPIDBHost)
+}
+
+func getDbPort() string {
+	return getEnv(APIDBPortEvnName, DefaultAPIDBPort)
 }
 
 func getPort() string {
