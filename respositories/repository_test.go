@@ -96,6 +96,54 @@ func TestNoteRepository_GetNote(t *testing.T) {
 	}
 }
 
+func TestNoteRepository_IsNoteExist(t *testing.T) {
+	tests := []struct {
+		name    string
+		noteId  int
+		want    bool
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+		{"happy", 1, true, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := noteRepository.IsNoteExist(tt.noteId)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("NoteRepository.GetNote() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("NoteRepository.GetNote() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestNoteRepository_Not_IsNoteExist(t *testing.T) {
+	tests := []struct {
+		name    string
+		noteId  int
+		want    bool
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+		{"happy", 42, false, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := noteRepository.IsNoteExist(tt.noteId)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("NoteRepository.GetNote() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("NoteRepository.GetNote() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestNoteRepository_GetNotes(t *testing.T) {
 	tests := []struct {
 		name    string

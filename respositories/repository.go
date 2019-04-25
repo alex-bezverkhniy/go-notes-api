@@ -97,6 +97,19 @@ func (nr *NoteRepository) GetNotes(start, count int) ([]model.Note, error) {
 	return notes, nil
 }
 
+// IsNoteExist - return true if note with ID exists
+func (nr *NoteRepository) IsNoteExist(id int) (bool, error) {
+	sqlQuery := fmt.Sprintf("SELECT count(id) FROM notes WHERE id=%d", id)
+	count := -1
+
+	err := nr.DB.QueryRow(sqlQuery).Scan(&count)
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+}
+
 // OpenDBConnection - opens connection with DB
 func OpenDBConnection(user, password, dbname string) *sql.DB {
 	connectionString := fmt.Sprintf("%s:%s@/%s", user, password, dbname)

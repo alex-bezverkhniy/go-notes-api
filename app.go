@@ -132,7 +132,8 @@ func (a *App) updateNote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if noteExists := a.isNoteExist(id, w); !noteExists {
+	if !a.isNoteExist(id, w) {
+		respondWithError(w, http.StatusNotFound, respositories.NoteNotFoundMsg)
 		return
 	}
 
@@ -175,8 +176,7 @@ func (a *App) deleteNote(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) isNoteExist(id int, w http.ResponseWriter) bool {
-	// TODO: replace by isNoteExists
-	_, err := a.NoteRepository.GetNote(id)
+	exists, err := a.NoteRepository.IsNoteExist(id)
 	if err != nil {
 		switch err {
 		case sql.ErrNoRows:
@@ -190,7 +190,7 @@ func (a *App) isNoteExist(id int, w http.ResponseWriter) bool {
 		}
 		return false
 	}
-	return true
+	return exists
 }
 
 func respondWithError(w http.ResponseWriter, statusCode int, errorMsg string) {
