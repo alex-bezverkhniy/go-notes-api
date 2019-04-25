@@ -28,11 +28,13 @@ func (nr *NoteRepository) CreateNote(note model.Note) (int, error) {
 	sqlQuery := fmt.Sprintf("INSERT INTO notes(title, body) VALUES('%s','%s')", note.Title, note.Body)
 
 	if _, err := nr.DB.Exec(sqlQuery); err != nil {
+		log.Panic(err)
 		return -1, err
 	}
 
 	err := nr.DB.QueryRow("SELECT LAST_INSERT_ID()").Scan(&note.ID)
 	if err != nil {
+		log.Panic(err)
 		return -1, err
 	}
 
@@ -44,6 +46,7 @@ func (nr *NoteRepository) UpdateNote(id int, note model.Note) (bool, error) {
 	sqlQuery := fmt.Sprintf("UPDATE notes SET title='%s', body='%s' WHERE id=%d", note.Title, note.Body, id)
 
 	if _, err := nr.DB.Exec(sqlQuery); err != nil {
+		log.Panic(err)
 		return false, err
 	}
 	return true, nil
@@ -54,6 +57,7 @@ func (nr *NoteRepository) DeleteNote(id int) (bool, error) {
 	sqlQuery := fmt.Sprintf("DELETE FROM notes WHERE id = %d", id)
 
 	if _, err := nr.DB.Exec(sqlQuery); err != nil {
+		log.Panic(err)
 		return false, err
 	}
 	return true, nil
@@ -80,6 +84,7 @@ func (nr *NoteRepository) GetNotes(start, count int) ([]model.Note, error) {
 
 	rows, err := nr.DB.Query(sqlQuery)
 	if err != nil {
+		log.Panic(err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -89,6 +94,7 @@ func (nr *NoteRepository) GetNotes(start, count int) ([]model.Note, error) {
 	for rows.Next() {
 		var n model.Note
 		if err := rows.Scan(&n.ID, &n.Title, &n.Body); err != nil {
+			log.Panic(err)
 			return nil, err
 		}
 		notes = append(notes, n)
@@ -104,6 +110,7 @@ func (nr *NoteRepository) IsNoteExist(id int) (bool, error) {
 
 	err := nr.DB.QueryRow(sqlQuery).Scan(&count)
 	if err != nil {
+		log.Panic(err)
 		return false, err
 	}
 
@@ -111,12 +118,12 @@ func (nr *NoteRepository) IsNoteExist(id int) (bool, error) {
 }
 
 // OpenDBConnection - opens connection with DB
-func OpenDBConnection(user, password, dbname, dbhost string) *sql.DB {
+func OpenDBConnection(user, password, dbname, dbhost, dbport string) *sql.DB {
 	connectionString := fmt.Sprintf("%s:%s@/%s", user, password, dbname)
 	if dbhost != "" {
-		connectionString = fmt.Sprintf("%s:%s@/%s@tcp(%s)/", user, password, dbname, dbhost)
+		connectionString = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", user, password, dbhost, dbport, dbname)
 	}
-
+	log.Println("Connecting to DB...")
 	db, err := sql.Open("mysql", connectionString)
 	if err != nil {
 		log.Fatal(err)
@@ -127,7 +134,7 @@ func OpenDBConnection(user, password, dbname, dbhost string) *sql.DB {
 // EnsureNotesTableExists - checks if tabel does NOT exist - creates it
 func (nr *NoteRepository) EnsureNotesTableExists() {
 	if _, err := nr.DB.Exec(model.NoteDDL); err != nil {
-		log.Print(err)
+		log.Panic(err)
 	} else {
 		log.Fatal("Table Note is not exist!")
 	}

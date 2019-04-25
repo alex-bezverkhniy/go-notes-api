@@ -12,7 +12,7 @@ var noteRepository NoteRepository
 var sampleNote = model.Note{ID: 1, Title: "sample title", Body: "sample body"}
 
 func TestMain(m *testing.M) {
-	noteRepository = NoteRepository{DB: OpenDBConnection("gonotes", "1Q2w3e4r", "gonotes", "")}
+	noteRepository = NoteRepository{DB: OpenDBConnection("gonotes", "1Q2w3e4r", "gonotes", "", "3306")}
 
 	//noteRepository.EnsureNotesTableExists()
 	prepareNotes(noteRepository)

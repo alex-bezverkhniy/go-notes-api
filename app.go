@@ -27,9 +27,9 @@ type App struct {
 }
 
 // NewApp - init function
-func NewApp(user, password, dbname, dbhost string) App {
+func NewApp(user, password, dbname, dbhost, dbport string) App {
 	a := App{}
-	a.NoteRepository = respositories.NewNoteRepository(respositories.OpenDBConnection(user, password, dbname, dbhost))
+	a.NoteRepository = respositories.NewNoteRepository(respositories.OpenDBConnection(user, password, dbname, dbhost, dbport))
 
 	a.Router = mux.NewRouter()
 	a.initializeRouters()
@@ -44,11 +44,17 @@ func (a *App) Run(address string) {
 }
 
 func (a *App) initializeRouters() {
+	a.Router.HandleFunc(APIBasePath+"/health", a.healthCheck).Methods("GET")
 	a.Router.HandleFunc(APIBasePath+"/notes", a.getNotes).Methods("GET")
 	a.Router.HandleFunc(APIBasePath+"/notes", a.createNote).Methods("POST")
 	a.Router.HandleFunc(APIBasePath+"/notes/{id:[0-9]+}", a.getNote).Methods("GET")
 	a.Router.HandleFunc(APIBasePath+"/notes/{id:[0-9]+}", a.updateNote).Methods("PUT")
 	a.Router.HandleFunc(APIBasePath+"/notes/{id:[0-9]+}", a.deleteNote).Methods("DELETE")
+}
+
+func (a *App) healthCheck(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(`OK`))
 }
 
 func (a *App) getNotes(w http.ResponseWriter, r *http.Request) {
