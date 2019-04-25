@@ -17,7 +17,7 @@ var a App
 var nr respositories.NoteRepository
 
 func TestMain(m *testing.M) {
-	a = NewApp("gonotes", "1Q2w3e4r", "gonotes")
+	a = NewApp("gonotes", "1Q2w3e4r", "gonotes", "")
 
 	// a.NoteRepository.EnsureNotesTableExists()
 	prepareNotes(a.NoteRepository)

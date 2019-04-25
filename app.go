@@ -27,9 +27,9 @@ type App struct {
 }
 
 // NewApp - init function
-func NewApp(user, password, dbname string) App {
+func NewApp(user, password, dbname, dbhost string) App {
 	a := App{}
-	a.NoteRepository = respositories.NewNoteRepository(respositories.OpenDBConnection(user, password, dbname))
+	a.NoteRepository = respositories.NewNoteRepository(respositories.OpenDBConnection(user, password, dbname, dbhost))
 
 	a.Router = mux.NewRouter()
 	a.initializeRouters()

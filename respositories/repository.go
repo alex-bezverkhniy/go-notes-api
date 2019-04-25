@@ -111,8 +111,12 @@ func (nr *NoteRepository) IsNoteExist(id int) (bool, error) {
 }
 
 // OpenDBConnection - opens connection with DB
-func OpenDBConnection(user, password, dbname string) *sql.DB {
+func OpenDBConnection(user, password, dbname, dbhost string) *sql.DB {
 	connectionString := fmt.Sprintf("%s:%s@/%s", user, password, dbname)
+	if dbhost != "" {
+		connectionString = fmt.Sprintf("%s:%s@/%s@tcp(%s)/", user, password, dbname, dbhost)
+	}
+
 	db, err := sql.Open("mysql", connectionString)
 	if err != nil {
 		log.Fatal(err)
