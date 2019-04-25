@@ -1,0 +1,26 @@
+### Get all notes
+GET http://localhost:8080/api/v1/notes
+
+### Add new note
+POST http://localhost:8080/api/v1/notes
+Content-Type: application/json
+
+{
+    "title": "new note title",
+    "body": "new note body"
+}
+
+### Get note by ID
+GET http://localhost:8080/api/v1/notes/1
+
+### Update note by ID
+PUT http://localhost:8080/api/v1/notes/1
+Content-Type: application/json
+
+{
+    "title": "New note title",
+    "body": "New note body"
+}
+
+### Delete note by ID
+DELETE http://localhost:8080/api/v1/notes/1
