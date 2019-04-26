@@ -4,3 +4,5 @@
 ```
 GOARCH=amd64 GOOS=linux go build
 ```
+
+## For more requests examples see `requests.html`
